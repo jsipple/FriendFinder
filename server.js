@@ -30,7 +30,11 @@ app.get('/:Route', (req, res) => {
     res.sendFile(path.join(__dirname, './app/public/' + route + '.html'))
 })
 
-app.get('api/people', (req, res) => {
+app.get('/api/people', (req, res) => {
+    return res.json(people)
+})
+
+app.post('/api/people', (req, res) => {
     let newPerson = req.body
     people.push(newPerson)
     res.json(newPerson)

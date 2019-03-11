@@ -122,10 +122,17 @@
 </body>
 <script>
 $('#submit').on('click', e => {
+    let score = []
+    for (let i = 1; i < 11;i++) {
+        score.push($('#question'+i).val().trim())
+    }
     e.preventDefault();
     const newPerson = {
-        name: $('')
+        name: $('#name').val().trim(),
+        photo: $('#image').val().trim(),
+        scores: score
     }
+    console.log(newPerson)
 })
 </script>
 </html>

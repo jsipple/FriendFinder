@@ -132,7 +132,11 @@ $('#submit').on('click', e => {
         photo: $('#image').val().trim(),
         scores: score
     }
-    console.log(newPerson)
+    $.post('/api/people', newPerson)
+    .then( data => {
+        console.log(data)
+        alert('your closest match is')
+    })
 })
 </script>
 </html>

@@ -158,11 +158,9 @@ $('#submit').on('click', e => {
     if (newPerson.name === '' || newPerson.photo === '') {
      alert('please fill out all required fields')
     } else {
-    $.post('/api/people', newPerson)
-    // data is just grabbing 
-    .then( data => {
-     // $('#myModal').modal('toggle')
-     for (let i = 0; i < data.length; i++) {
+     $.get('/api/people', (data) => {
+      for (let i = 0; i < data.length; i++) {
+       let val = 0
       for (let j = 0; j < data[i].scores.length; j++) {
        let compare = newPerson.scores[j] - data[i].scores[j]
        console.log(compare)
@@ -186,6 +184,12 @@ $('#submit').on('click', e => {
       }
       compared.push(val)
      }
+     })
+    $.post('/api/people', newPerson)
+    // data is just grabbing what has been posted needs this to grab current array so need to do this in a different location
+    .then( data => {
+     // $('#myModal').modal('toggle')
+
         console.log(data)
         console.log(compared)
     })

@@ -144,7 +144,8 @@
 <script>
 $('#submit').on('click', e => {
  e.preventDefault()
- $('#myModal').modal('toggle')
+    let compared = []
+    let val = 0
     let score = []
     for (let i = 1; i < 11;i++) {
         score.push($('#question'+i).val().trim())
@@ -154,10 +155,41 @@ $('#submit').on('click', e => {
         photo: $('#image').val().trim(),
         scores: score
     }
+    if (newPerson.name === '' || newPerson.photo === '') {
+     alert('please fill out all required fields')
+    } else {
     $.post('/api/people', newPerson)
+    // data is just grabbing 
     .then( data => {
+     // $('#myModal').modal('toggle')
+     for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < data[i].scores.length; j++) {
+       let compare = newPerson.scores[j] - data[i].scores[j]
+       console.log(compare)
+       switch (compare) {
+        case 0:
+        val += 1
+        break;
+        case 1:
+        val += .75
+        break;
+        case 2:
+        val += .5
+        break;
+        case 3:
+        val += .25
+        break;
+        case 4:
+        val += 0
+        break;
+       }
+      }
+      compared.push(val)
+     }
         console.log(data)
+        console.log(compared)
     })
+    }
 })
 </script>
 </html>

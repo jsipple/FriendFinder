@@ -125,13 +125,13 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Closest Match</h5>
+        <h5 class="modal-title" id="title">Closest Match</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <p>Your closest match is</p>
+      <div class="modal-body" id="modal-body">
+          <!-- <p>content</p> -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary">Contact them</button>
@@ -144,6 +144,8 @@
 <script>
 $('#submit').on('click', e => {
  e.preventDefault()
+    let b;
+    let a;
     let compared = []
     let val = 0
     let score = []
@@ -163,7 +165,6 @@ $('#submit').on('click', e => {
        let val = 0
       for (let j = 0; j < data[i].scores.length; j++) {
        let compare = newPerson.scores[j] - data[i].scores[j]
-       console.log(compare)
        switch (compare) {
         case 0:
         val += 1
@@ -182,16 +183,30 @@ $('#submit').on('click', e => {
         break;
        }
       }
+      // console.log(val)
       compared.push(val)
      }
+    //  could make it an object with an id attached to it
+     // not sure if this is a good way to go about it(need the index(this rearranges that))
+     b = compared.indexOf(Math.max(...compared))
+     compared = compared.map(x => x*10 + '%')
+     // need to sort for highest
+     a = $('<p>').text('Your closest match is ' + data[b].name)
+    let c = $('<img>').attr('src', data[b].img)
+     console.log(b)
+     $('#title').text('Your closest match (' + compared[b] + ')' )
+     $('#modal-body').append(a, c)
      })
     $.post('/api/people', newPerson)
     // data is just grabbing what has been posted needs this to grab current array so need to do this in a different location
     .then( data => {
-     // $('#myModal').modal('toggle')
+     // add a view more to see either others that match the same percent or just to see others
+     console.log(data)
 
         console.log(data)
-        console.log(compared)
+     $('#myModal').modal('toggle')
+
+        // console.log(compared.map(x => x*10 + '%'))
     })
     }
 })

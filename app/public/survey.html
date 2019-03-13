@@ -134,7 +134,7 @@
           <!-- <p>content</p> -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Contact them</button>
+        <button type="button" id='viewMore' class="btn btn-primary">View More</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -142,11 +142,11 @@
 </div>
 </body>
 <script>
+    compared = []
 $('#submit').on('click', e => {
  e.preventDefault()
     let b;
     let a;
-    let compared = []
     let val = 0
     let score = []
     for (let i = 1; i < 11;i++) {
@@ -184,17 +184,18 @@ $('#submit').on('click', e => {
        }
       }
       // console.log(val)
-      compared.push(val)
+      compared.push({id: i,value: val})
      }
     //  could make it an object with an id attached to it
      // not sure if this is a good way to go about it(need the index(this rearranges that))
-     b = compared.indexOf(Math.max(...compared))
-     compared = compared.map(x => x*10 + '%')
+     compared = compared.map( x => ({value: x.value*10, id: x.id}))
+     compared.sort( (a,b) => b.value - a.value)
+     console.log(compared)
      // need to sort for highest
-     a = $('<p>').text('Your closest match is ' + data[b].name)
-    let c = $('<img>').attr('src', data[b].img)
+     a = $('<p>').text('Your closest match is ' + data[compared[0].id].name)
+    let c = $('<img>').attr('src', data[compared[0].id].img)
      console.log(b)
-     $('#title').text('Your closest match (' + compared[b] + ')' )
+     $('#title').text('Your closest match (' + compared[0].value + '%)' )
      $('#modal-body').append(a, c)
      })
     $.post('/api/people', newPerson)
@@ -209,6 +210,16 @@ $('#submit').on('click', e => {
         // console.log(compared.map(x => x*10 + '%'))
     })
     }
+})
+$("#viewMore").on('click', () => {
+    console.log(compared)
+    $.get('/api/people', (data) => {
+        for (let i = 1; i < compared.length; i++) {
+            let person = $("<p>").text(data[compared[i].id].name + `(${compared[i].value}%)`)
+            let image = $('<img>').attr('src', data[compared[i].id].img)
+        $('#modal-body').append(person, image)
+        }
+    })
 })
 </script>
 </html>

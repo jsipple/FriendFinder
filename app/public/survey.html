@@ -11,8 +11,17 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
-<link rel="stylesheet" href="style.css">
 <title>Document</title>
+<style>
+body {
+    width: 80vw;
+    margin: 0 auto;
+}
+img {
+    height: 200px;
+    width: 250px;
+}
+</style>
 </head>
 <body>
  <h1>Survey Questions</h1>
@@ -29,15 +38,17 @@
     </div>
     <hr>
     <!-- put a margin here -->
+    <div class="chosen-container">
     <h2>Question 1</h2>
     <p>Your mind is always buzzing with unexplored ideas and plans.</p>
-    <select name="question" id="question1">
+    <select class='chosen-select' name="question" id="question1">
         <option value="1">1 (stongly disagree)</option>
         <option value="2">2</option>
         <option value="3">3</option>
         <option value="4">4</option>
         <option value="5">5 (strongly agree)</option>
     </select>
+    </div>
     <h2>Question 2</h2>
     <p>Generally speaking, you rely more on your experience than your imagination.</p>
     <select name="question" id="question2">
@@ -135,7 +146,7 @@
           <!-- <p>content</p> -->
       </div>
       <div class="modal-footer">
-        <button type="button" id='viewMore' class="btn btn-primary">View More</button>
+        <button type="button" id='viewNext' class="btn btn-primary">View Next closest match</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -144,12 +155,14 @@
 </body>
 <script>
     compared = []
+    let i = 0
 $('#submit').on('click', e => {
  e.preventDefault()
     let b;
     let a;
     let val = 0
     let score = []
+
     for (let i = 1; i < 11;i++) {
         score.push($('#question'+i).val().trim())
     }
@@ -212,14 +225,13 @@ $('#submit').on('click', e => {
     })
     }
 })
-$("#viewMore").on('click', () => {
-    console.log(compared)
+$("#viewNext").on('click', () => {
+    i++
     $.get('/api/people', (data) => {
-        for (let i = 1; i < compared.length; i++) {
             let person = $("<p>").text(data[compared[i].id].name + `(${compared[i].value}%)`)
             let image = $('<img>').attr('src', data[compared[i].id].img)
-        $('#modal-body').append(person, image)
-        }
+        $('#modal-body').html(person)
+        $('#modal-body').append(image)
     })
 })
 </script>
